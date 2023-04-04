@@ -10,19 +10,22 @@ namespace Shipshape.Patches;
 public class UIPatches
 {
     public static TextMeshProUGUI crosshairText;
-    public static CrosshairManager crosshairManager;
+    static GameObject crosshair;
+    static GameObject ui;
 
-    public static void AddTextToCrosshair()
+    public static void Init()
     {
         GameObject crosshairTextObject = new GameObject("Crosshair Text");
         Canvas canvas = crosshairTextObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
+
         crosshairText = crosshairTextObject.AddComponent<TextMeshProUGUI>();
-        crosshairText.text = "XXX<br>XXX     XXX<br>XXX";
         crosshairText.alignment = TextAlignmentOptions.Center;
         crosshairText.fontSize = 20;
         crosshairText.richText = true;
-        crosshairManager = crosshairTextObject.AddComponent<CrosshairManager>();
+
+        crosshair = GameObject.Find("CrossHair");
+        ui = GameObject.Find("UI");
     }
 
     [HarmonyPrefix]
@@ -74,30 +77,26 @@ public class UIPatches
                     extra = ((int)(controllable.GetComponentInChildren<ControllableRotate>().transform.localEulerAngles.z)).ToString();
                     extra = new string('0', 3 - extra.Length) + extra;
                 }
-                crosshairManager.ChangeText($"{controllable.CurrentValueTarget.ToString()}<br>          {extra}<br>{controllable.CurrentValue.ToString()}");
+                ChangeText($"{controllable.CurrentValueTarget.ToString()}<br>          {extra}<br>{controllable.CurrentValue.ToString()}");
             }
         }
         else
         {
             __instance.isInteracting = false;
-            crosshairManager.ChangeText("");
+            ChangeText("");
         }
         return;
     }
-}
 
-public class CrosshairManager : MonoBehaviour
-{
-    GameObject crosshair;
-
-    public void Start()
+    public static void ChangeText(string newText)
     {
-        crosshair = GameObject.Find("CrossHair");
+        if (crosshairText == null) return;
+        crosshairText.text = newText;
     }
 
-    public void ChangeText(string newText)
+    public static void ToggleUI()
     {
-        UIPatches.crosshairText.text = newText;
-        // crosshair.SetActive(newText.Length == 0);
+        if (ui == null) ui = GameObject.Find("UI"); // why are you NULL?!?!?!?
+        ui.SetActive(!ui.activeInHierarchy);
     }
 }
