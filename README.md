@@ -1,6 +1,6 @@
 # Shipshape
 
-Shipshape is a mod for Airships 2, from the Landfall Archives. It patches bugs, adds content, and makes the game shipshape and ready to go!
+Shipshape is a mod for Airships 2, from the Landfall Archives. It patches bugs, adds content, and makes the game shipshape and ready to go.
 
 readme is still WIP lol
 
